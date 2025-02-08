@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "target": "ES6",
+    "module": "CommonJS",
+    "strict": true,
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "esModuleInterop": true,
+    "baseUrl": "./src",
+    "paths":{
+      "@routes/*":["routes/*"],
+      "@configs/*":["configs/*"],
+      "@factories/*":["factories/*"],
+      "@services/*":["services/*"],
+      "@utilities/*":["utilities/*"]
+    },
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
+  }
+}
