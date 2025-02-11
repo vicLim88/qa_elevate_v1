@@ -2,18 +2,21 @@ version: '3.8'
 
 services:
   ai-test-generator:
-    build: .
+    build: ./ai-test-generator
     container_name: ai-test-generator
     ports:
       - "3000:3000"
     env_file:
-      - ./.env
+      - ./ai-test-generator/.env
     depends_on:
       - ollama
+    networks:
+      - my_network
 
   ollama:
     image: ollama/ollama:latest
     container_name: ollama
+    restart: always
     ports:
       - "11434:11434"
     deploy:
@@ -25,6 +28,19 @@ services:
               capabilities: [gpu]
     volumes:
       - ollama-data:/root/.ollama
+    networks:
+      - my_network
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        ollama serve &
+        sleep 10
+        ollama pull mistral || echo "Mistral model already downloaded"
+        wait
 
 volumes:
   ollama-data:
+
+networks:
+  my_network:
+    driver: bridge

@@ -2,7 +2,7 @@ import * as dotenv from "dotenv";
 import { injectable } from "tsyringe";
 import axios from "axios";
 
-import { URL_OLLAMA_STAGING } from "@configs/env";
+import { URL_OLLAMA_STAGING, URL_OLLAMA_DOCKER_STAGING } from "@configs/env";
 import { LLMService } from "@services/LLM";
 import { logger_custom } from "@utilities/custom_logger";
 
@@ -10,7 +10,7 @@ dotenv.config();
 
 @injectable()
 export class OllamaService implements LLMService {
-    private readonly ollamaURL: string = URL_OLLAMA_STAGING!;
+    private readonly ollamaURL: string = URL_OLLAMA_DOCKER_STAGING!;
     async generateTestCase(appMetaData: any): Promise<string[]> {
 
         // ToDo : all Services uses formattedMetaData, and prompt. Will need to refactor.
