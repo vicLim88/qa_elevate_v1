@@ -1,5 +1,5 @@
-# Use an official Node.js runtime as a parent image
-FROM node:18-alpine
+# ✅ Use Microsoft's Playwright image (Includes all dependencies)
+FROM mcr.microsoft.com/playwright:v1.50.1
 
 # Set the working directory inside the container
 WORKDIR /app
@@ -8,7 +8,10 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 
 # Install dependencies
-RUN npm install --only=production
+RUN npm install
+
+# Install Playwright browsers
+RUN npx playwright install --with-deps
 
 # Copy the rest of the application
 COPY . .

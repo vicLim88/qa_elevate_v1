@@ -9,7 +9,10 @@ services:
     env_file:
       - ./ai-test-generator/.env
     depends_on:
-      - ollama
+      mongodb:
+        condition: service_healthy
+      ollama:
+        condition: service_started
     networks:
       - my_network
 
@@ -38,7 +41,30 @@ services:
         ollama pull mistral || echo "Mistral model already downloaded"
         wait
 
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb-data:/data/db
+      - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+    networks:
+      - my_network
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: rootpassword
+    # command:
+    #   mongod --noauth
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh mongodb://admin:password@localhost:27017/ai_vision --quiet
+      interval: 10s
+      retries: 5
+      start_period: 5s
+
 volumes:
+  mongodb-data:
   ollama-data:
 
 networks:
